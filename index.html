@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ladd's Arcade - Play Browser Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .game-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .play-button {
+            display: inline-block;
+            width: 100%;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ffd700;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(180deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Ladd's Arcade</h1>
+            <p class="tagline">Classic Browser Games, Reimagined</p>
+        </header>
+
+        <div class="games-grid">
+            <!-- Cookie Clicker V2 -->
+            <div class="game-card">
+                <div class="game-thumbnail">🍪</div>
+                <div class="game-info">
+                    <h2 class="game-title">Cookie Clicker V2</h2>
+                    <p class="game-description">Click cookies, unlock upgrades, and build your cookie empire! Enhanced version with more features.</p>
+                    <div class="game-tags">
+                        <span class="tag">Idle</span>
+                        <span class="tag">Clicker</span>
+                        <span class="tag">Upgrades</span>
+                    </div>
+                    <a href="cookie-clicker-v2.html" class="play-button">🎮 Play Now</a>
+                </div>
+            </div>
+
+            <!-- Cookie Clicker Classic -->
+            <div class="game-card">
+                <div class="game-thumbnail">🍪</div>
+                <div class="game-info">
+                    <h2 class="game-title">Cookie Clicker Classic</h2>
+                    <p class="game-description">The original cookie clicking experience. Simple, addictive, and delicious!</p>
+                    <div class="game-tags">
+                        <span class="tag">Idle</span>
+                        <span class="tag">Classic</span>
+                        <span class="tag">Casual</span>
+                    </div>
+                    <a href="cookie-clicker.html" class="play-button">🎮 Play Now</a>
+                </div>
+            </div>
+
+            <!-- Ladd Snake Google Style -->
+            <div class="game-card">
+                <div class="game-thumbnail">🐍</div>
+                <div class="game-info">
+                    <h2 class="game-title">Ladd Snake - Google Style</h2>
+                    <p class="game-description">Classic snake game with a Google-inspired clean design. Guide Ladd to eat and grow!</p>
+                    <div class="game-tags">
+                        <span class="tag">Arcade</span>
+                        <span class="tag">Snake</span>
+                        <span class="tag">Retro</span>
+                    </div>
+                    <a href="ladd-snake-google.html" class="play-button">🎮 Play Now</a>
+                </div>
+            </div>
+
+            <!-- Ladd Snake -->
+            <div class="game-card">
+                <div class="game-thumbnail">🐍</div>
+                <div class="game-info">
+                    <h2 class="game-title">Ladd Snake Classic</h2>
+                    <p class="game-description">The classic snake experience with Ladd! Eat, grow, and don't hit the walls!</p>
+                    <div class="game-tags">
+                        <span class="tag">Arcade</span>
+                        <span class="tag">Classic</span>
+                        <span class="tag">High Score</span>
+                    </div>
+                    <a href="ladd-snake.html" class="play-button">🎮 Play Now</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with ❤️ by West | <a href="https://github.com/westval" target="_blank">GitHub</a></p>
+            <p style="margin-top: 10px; font-size: 0.9em;">All games run entirely in your browser. No downloads required!</p>
+        </footer>
+    </div>
+</body>
+</html>
