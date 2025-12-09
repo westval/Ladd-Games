@@ -983,11 +983,62 @@
         <!-- Right Column: Store & Stats -->
         <div id="rightColumn">
             <div id="storeTabs">
+                <div class="storeTab" onclick="switchTab('prestige')">⭐ Prestige</div>
                 <div class="storeTab active" onclick="switchTab('store')">🛒 Store</div>
                 <div class="storeTab" onclick="switchTab('stats')">📊 Stats</div>
                 <div class="storeTab" onclick="switchTab('options')">⚙️ Options</div>
             </div>
             <div id="storeContent">
+                <!-- Prestige Tab -->
+                <div id="prestigeTab" class="tabContent" style="display: none;">
+                    <div class="sectionTitle">⭐ PRESTIGE SYSTEM ⭐</div>
+                    <div class="prestigeInfo">
+                        <div class="statLine" style="font-size: 20px; color: #ffd700; font-weight: bold;">
+                            Prestige Level: <span id="prestigeLevelDisplay">0</span>
+                        </div>
+                        <div class="statLine" style="font-size: 18px; color: #ffaa00;">
+                            Heavenly Chips: <span id="heavenlyChipsDisplay">0</span>
+                        </div>
+                        <div class="statLine" style="font-size: 16px; color: #8ab4f8;">
+                            Prestige Multiplier: <span id="prestigeMultiplierDisplay">×1.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="prestigeDescription" style="margin: 20px 0; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 14px; line-height: 1.6;">
+                        <strong style="color: #ffd700;">What is Prestige?</strong><br>
+                        Prestiging will reset your game progress, but you'll gain <strong style="color: #ffaa00;">Heavenly Chips</strong> based on your total cookies baked!<br><br>
+                        <strong style="color: #90ee90;">Benefits:</strong><br>
+                        • Each Heavenly Chip gives a permanent <strong>+1%</strong> bonus to CpS<br>
+                        • Unlock special prestige upgrades<br>
+                        • Show off your prestige level!<br><br>
+                        <strong style="color: #ff6b6b;">What you'll lose:</strong><br>
+                        • All cookies<br>
+                        • All buildings<br>
+                        • All non-prestige upgrades<br><br>
+                        <strong style="color: #ffd700;">You will gain: <span id="prestigeGainPreview">0</span> Heavenly Chips</strong>
+                    </div>
+                    
+                    <button id="prestigeButton" style="
+                        width: 100%;
+                        padding: 20px;
+                        font-size: 24px;
+                        font-weight: bold;
+                        background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+                        color: #000;
+                        border: 4px solid #fff;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+                        box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+                        transition: all 0.3s;
+                    " onclick="doPrestige()">
+                        🌟 ASCEND AND PRESTIGE 🌟
+                    </button>
+                    
+                    <div class="sectionTitle" style="margin-top: 30px;">🎁 Prestige Upgrades</div>
+                    <div id="prestigeUpgradesContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px;"></div>
+                </div>
+
                 <!-- Store Tab -->
                 <div id="storeTab" class="tabContent">
                     <div class="sectionTitle">⬆️ Upgrades</div>
@@ -1084,7 +1135,12 @@
             { id: 'timemachine', name: "Nathan's Screaming Library", icon: '📚', description: 'Books yell the information at you', baseCost: 14000000000000, cps: 65000000 },
             { id: 'antimatter', name: "Ladd's Portal Garage", icon: '🌌', description: 'Every car drives into another universe. Great reviews though', baseCost: 170000000000000, cps: 430000000 },
             { id: 'prism', name: "Nathan's Orb Hatchery", icon: '🔮', description: 'Grows mysterious glowing orbs. None of them safe', baseCost: 2100000000000000, cps: 2900000000 },
-            { id: 'chancemaker', name: "Ladd's Infinite Bathroom", icon: '🚽', description: 'Has been flushing for 3 years straight. Infinite water somehow', baseCost: 26000000000000000, cps: 21000000000 }
+            { id: 'chancemaker', name: "Ladd's Infinite Bathroom", icon: '🚽', description: 'Has been flushing for 3 years straight. Infinite water somehow', baseCost: 26000000000000000, cps: 21000000000 },
+            { id: 'fractal', name: "Nathan's Fractal Engine", icon: '🌀', description: 'Each part contains the whole. Produces infinite Ladds', baseCost: 310000000000000000, cps: 150000000000 },
+            { id: 'javascript', name: "Ladd's JavaScript Console", icon: '💻', description: 'console.log("making cookies"). It just works', baseCost: 71000000000000000000, cps: 1100000000000 },
+            { id: 'idleverse', name: "Nathan's Idleverse", icon: '🪐', description: 'An entire universe dedicated to being productive while idle', baseCost: 12000000000000000000000, cps: 8300000000000 },
+            { id: 'cortex', name: "Ladd's Cortex Baker", icon: '🧠', description: 'Bakes cookies using pure thought. Gives you a headache', baseCost: 1900000000000000000000000, cps: 64000000000000 },
+            { id: 'you', name: "You", icon: '😎', description: 'The ultimate producer. It\'s you. You\'re doing great', baseCost: 540000000000000000000000000, cps: 510000000000000 }
         ];
 
         // Upgrades - 300+ upgrades!
@@ -1662,10 +1718,10 @@
                 cps += building.cps * count * multiplier;
             });
             
-            const prestigeBonus = gameState.prestigeLevel * 0.01;
+            const prestigeMultiplier = calculatePrestigeMultiplier();
             const frenzyBonus = Date.now() < gameState.frenzyExpires ? gameState.frenzyMultiplier : 1;
             
-            gameState.cookiesPerSecond = cps * gameState.globalMultiplier * (1 + prestigeBonus) * frenzyBonus;
+            gameState.cookiesPerSecond = cps * gameState.globalMultiplier * prestigeMultiplier * frenzyBonus;
         }
 
         // Render Buildings
@@ -2231,6 +2287,81 @@
             playGoldenSound();
         }
 
+        // Prestige System
+        function calculatePrestigeGain() {
+            if (gameState.totalCookies < 1000000000) return 0;
+            return Math.floor(Math.sqrt(gameState.totalCookies / 1000000000));
+        }
+
+        function calculatePrestigeMultiplier() {
+            return 1 + (gameState.heavenlyChips * 0.01);
+        }
+
+        function updatePrestigeDisplay() {
+            const gain = calculatePrestigeGain();
+            const multiplier = calculatePrestigeMultiplier();
+            
+            document.getElementById('prestigeLevelDisplay').textContent = gameState.prestigeLevel;
+            document.getElementById('heavenlyChipsDisplay').textContent = formatNumber(gameState.heavenlyChips);
+            document.getElementById('prestigeMultiplierDisplay').textContent = '×' + multiplier.toFixed(2);
+            document.getElementById('prestigeGainPreview').textContent = formatNumber(gain);
+            
+            const button = document.getElementById('prestigeButton');
+            if (gain > 0) {
+                button.style.opacity = '1';
+                button.style.cursor = 'pointer';
+                button.disabled = false;
+            } else {
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+                button.disabled = true;
+            }
+        }
+
+        function doPrestige() {
+            const gain = calculatePrestigeGain();
+            
+            if (gain === 0) {
+                showNotification('⚠️ Not Ready', 'You need at least 1 billion total cookies to prestige!');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to prestige?\n\nYou will gain ${formatNumber(gain)} Heavenly Chips!\nYour current multiplier: ×${calculatePrestigeMultiplier().toFixed(2)}\nNew multiplier will be: ×${(1 + ((gameState.heavenlyChips + gain) * 0.01)).toFixed(2)}\n\nAll progress will be reset except Heavenly Chips!`)) {
+                return;
+            }
+            
+            // Grant prestige rewards
+            gameState.heavenlyChips += gain;
+            gameState.prestigeLevel += 1;
+            
+            // Reset everything
+            gameState.cookies = 0;
+            gameState.cookiesPerSecond = 0;
+            gameState.clickPower = 1;
+            gameState.totalClicks = 0;
+            gameState.handMade = 0;
+            gameState.buildings = {};
+            gameState.upgrades = {};
+            gameState.buildingMultipliers = {};
+            gameState.globalMultiplier = 1;
+            gameState.goldenMultiplier = 1;
+            gameState.frenzyMultiplier = 1;
+            
+            // Show success
+            showNotification('⭐ PRESTIGE!', `You ascended! Gained ${formatNumber(gain)} Heavenly Chips!`);
+            startDiscoParty();
+            
+            // Update display
+            renderBuildings();
+            renderUpgrades();
+            calculateCPS();
+            updatePrestigeDisplay();
+            
+            playGoldenSound();
+            
+            saveGame();
+        }
+
         // Save/Load
         function saveGame() {
             localStorage.setItem('laddClickerSave', JSON.stringify(gameState));
@@ -2294,6 +2425,7 @@
                 updateDisplay();
                 updateBuffTimer();
                 checkAchievements();
+                updatePrestigeDisplay();
                 
                 // Re-render buildings and upgrades every 100ms to update glow states
                 const now = Date.now();
